@@ -145,7 +145,7 @@ void createaccount()
     printf("\n");
     printf("    Enter Password: (remember) ");
     takePassword(U.pass);
-    printf("\n");
+    printf("\n\n");
     printf("    Enter emailID - ");
     scanf("%s", U.emailid);
     printf("\n");
