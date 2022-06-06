@@ -101,11 +101,11 @@ void createaccount()
     gotoxy(57, 3);
     puts("<--<<Create Account>>-->");
     printf("\n\n");
-    printf("    Enter First Name: ");
+    printf("    Enter your First Name: ");
     fflush(stdin);
     gets(U.fname);
     printf("\n");
-    printf("    Enter Last Name: ");
+    printf("    Enter your Last Name: ");
     gets(U.lname);
     printf("\n");
     printf("    Enter Age - ");
