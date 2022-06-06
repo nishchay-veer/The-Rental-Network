@@ -97,9 +97,24 @@ void createaccount()
 {
     struct user U;
     FILE *fp, *fp2;
+    int z,j;
     system("cls");
     gotoxy(57, 3);
-    puts("<--<<Create Account>>-->");
+    // gotoxy(53, 3);
+    char name[50] = "CREATE ACCOUNT";
+    z=strlen(name);
+	for(j=0;j<=16;j++){
+		Sleep(50);
+		printf("\xDB");
+	}
+	for(j=0;j<=z;j++){
+		Sleep(60);
+		printf(" %c",name[j]);
+	}
+	for(j=0;j<=16;j++){
+		Sleep(50);
+		printf("\xDB");
+	}
     printf("\n\n");
     printf("    Enter First Name: ");
     fflush(stdin);
@@ -131,7 +146,7 @@ void createaccount()
         fp2 = fopen("owner.txt", "ab+");
         if (fp2 == NULL)
         {
-            printf("\nError - opened - file\n");
+            printf("\nError opened file\n");
             exit(1);
         }
         fwrite(&U, sizeof(struct user), 1, fp2);
@@ -195,14 +210,29 @@ void writePassword(char pss[20])
 void login()
 {
     char uname[20], pss[20];
+    int z,j;
     FILE *fp1;
     struct user u;
     system("cls");
     gotoxy(53, 3);
-    printf("<--<<LOGIN TO YOUR ACCOUNT>>->\n\n");
+    char name[50] = "LOGIN TO YOUR ACCOUNT";
+    z=strlen(name);
+	for(j=0;j<=16;j++){
+		Sleep(50);
+		printf("\xDB");
+	}
+	for(j=0;j<=z;j++){
+		Sleep(60);
+		printf(" %c",name[j]);
+	}
+	for(j=0;j<=16;j++){
+		Sleep(50);
+		printf("\xDB");
+	}
+    gotoxy(53, 5);
     printf(" Enter Username: ");
     scanf("%s", uname);
-    printf("\n");
+    gotoxy(53, 7);
     printf(" Enter Password: ");
     writePassword(pss);
     /// Reading from file
