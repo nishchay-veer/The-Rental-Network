@@ -26,9 +26,9 @@ struct user
     int phnum;
     char emailid[40];
     int age;
-    char locality[20];
+    char position[2];
     // int price_upperlimit;
-    // int price_lowerlimit; 
+    // int price_lowerlimit;
 };
 int main()
 {
@@ -125,7 +125,7 @@ int menu()
 void createaccount()
 {
     struct user U;
-    FILE *fp;
+    FILE *fp, *fp2;
     system("cls");
     gotoxy(57, 3);
     puts("<--<<Create Account>>-->");
@@ -145,22 +145,44 @@ void createaccount()
     printf("\n");
     printf("    Enter Password: (remember) ");
     takePassword(U.pass);
-    printf("\n");
+    printf("\n\n");
     printf("    Enter emailID - ");
     scanf("%s", U.emailid);
     printf("\n");
     printf("    Enter Phone Num - ");
     scanf("%d", &U.phnum);
     printf("\n");
-    printf("    Enter Locality in which you are (searching/lending) a home - ");
-    scanf("%s", U.locality);
+    printf("    Are you an Owner(o) or a Tenant(t) - ");
+    scanf("%s", U.position);
     printf("\n");
-    // printf("    Enter price  lower limit - ");
-    // scanf("%d", &U.price_lowerlimit);
-    // printf("\n");
-    // printf("    Enter price  upper limit - ");
-    // scanf("%d", &U.price_upperlimit);
-    // printf("\n");
+    if (U.position[0] == 'o')
+    {
+        fp2 = fopen("owner.txt", "ab+");
+        if (fp2 == NULL)
+        {
+            printf("\nError opened file\n");
+            exit(1);
+        }
+        fwrite(&U, sizeof(struct user), 1, fp2);
+        fclose(fp2);
+        // system("cls");
+        // gotoxy(55, 20);
+        // printf(" Account Created Successfully.");
+        // gotoxy(75, 25);
+        // printf("Press any key to continue...");
+        // getch();
+    }
+    if (U.position[0] == 't')
+    {
+        fp2 = fopen("tenant.txt", "ab+");
+        if (fp2 == NULL)
+        {
+            printf("\nError opened file\n");
+            exit(1);
+        }
+        fwrite(&U, sizeof(struct user), 1, fp2);
+        fclose(fp2);
+    }
     fp = fopen("login.txt", "ab+");
     if (fp == NULL)
     {
@@ -175,6 +197,7 @@ void createaccount()
     gotoxy(75, 25);
     printf("Press any key to continue...");
     getch();
+
     system("cls");
 }
 void writePassword(char pss[20])
@@ -207,7 +230,7 @@ void writePassword(char pss[20])
 void login()
 {
     char uname[20], pss[20];
-    FILE *fp;
+    FILE *fp1;
     struct user u;
     system("cls");
     gotoxy(53, 3);
@@ -218,14 +241,14 @@ void login()
     printf(" Enter Password: ");
     writePassword(pss);
     /// Reading from file
-    fp = fopen("login.txt", "r");
-    if (fp == NULL)
+    fp1 = fopen("login.txt", "r");
+    if (fp1 == NULL)
     {
         printf("\"File not found\"");
         return;
     }
     int flag = 0;
-    while (fread(&u, sizeof(struct user), 1, fp))
+    while (fread(&u, sizeof(struct user), 1, fp1))
     {
         if (strcmp(uname, u.username) == 0 && strcmp(pss, u.pass) == 0)
         {
@@ -234,8 +257,26 @@ void login()
             printf(" Press any key to continue...");
             getch();
             gotoxy(57, 12);
-            printf(" Welcome %s %s ", u.fname, u.lname);
+            char str[10];
+            char *ptr = str;
+            if (u.position[0] == 'o')
+            {
+                ptr = "Owner";
+            }
+            else if (u.position[0] == 't')
+            {
+                ptr = "Tenant";
+            }
+            else
+            {
+                printf("Invalid choice\n");
+                exit(0);
+            }
+
+            printf(" Welcome %s %s. ", u.fname, u.lname);
+            printf("You are logged in as %s", ptr);
             getch();
+            break;
         }
     }
     if (flag == 0)
@@ -244,7 +285,7 @@ void login()
         printf(" Press any key to continue...");
         getch();
     }
-    fclose(fp);
+    fclose(fp1);
     system("cls");
 }
 void gotoxy(int x, int y)
