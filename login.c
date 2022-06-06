@@ -131,7 +131,7 @@ void createaccount()
         fp2 = fopen("owner.txt", "ab+");
         if (fp2 == NULL)
         {
-            printf("\nError opened file\n");
+            printf("\nError - opened - file\n");
             exit(1);
         }
         fwrite(&U, sizeof(struct user), 1, fp2);
