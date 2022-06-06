@@ -26,9 +26,7 @@ struct user
     int phnum;
     char emailid[40];
     int age;
-    char position[2];
-    // int price_upperlimit;
-    // int price_lowerlimit;
+    char position[1];
 };
 int main()
 {
@@ -45,14 +43,11 @@ int main()
             login();
             break;
 
-            // case 3:
-            //     login();
-            //     break;
-
         case 3:
             exit(0);
         default:
             printf("Invalid Choice! ");
+            exit(0);
             break;
         }
     }
@@ -98,30 +93,6 @@ int menu()
     scanf("%d", &ch);
     return ch;
 }
-// void verify()
-// {
-//     FILE *fp;
-//     struct user u;
-//     system("cls");
-//     gotoxy(52,3);
-//     printf("    Your Details Are..\n\n");
-//     ///Reading from file
-//     fp=fopen("C:\CHATBOT\login.txt" ,"rb+");
-//     if(fp==NULL)
-//     {
-//         printf("\"File not found\"");
-//         return ;
-//     }
-//     while(fread(&u, sizeof(struct user), 1, fp)){
-//         printf("\n    Name: %s %s \n", u.fname,u.lname);
-//         printf("\n    Username: %s\n\n    Password = %s \n\n", u.username,u.pass);
-//     }
-//     fclose(fp);
-//     gotoxy(75,16);
-//     printf("Press any key to continue...");
-//     getch();
-//     system("cls");
-// }
 void createaccount()
 {
     struct user U;
@@ -165,12 +136,6 @@ void createaccount()
         }
         fwrite(&U, sizeof(struct user), 1, fp2);
         fclose(fp2);
-        // system("cls");
-        // gotoxy(55, 20);
-        // printf(" Account Created Successfully.");
-        // gotoxy(75, 25);
-        // printf("Press any key to continue...");
-        // getch();
     }
     if (U.position[0] == 't')
     {
