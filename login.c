@@ -13,6 +13,7 @@ void createaccount();
 void login();
 // int createaccount();
 void gotoxy(int, int);
+void addDetails();
 FILE *fp;
 struct user u, U;
 int choice;
@@ -23,7 +24,7 @@ struct user
     char username[20];
     char fname[20];
     char lname[20];
-    int phnum;
+    double phnum;
     char emailid[40];
     int age;
     char position[1];
@@ -97,24 +98,27 @@ void createaccount()
 {
     struct user U;
     FILE *fp, *fp2;
-    int z,j;
+    int z, j;
     system("cls");
-    gotoxy(57, 3);
+    gotoxy(45, 3);
     // gotoxy(53, 3);
     char name[50] = "CREATE ACCOUNT";
-    z=strlen(name);
-	for(j=0;j<=16;j++){
-		Sleep(50);
-		printf("\xDB");
-	}
-	for(j=0;j<=z;j++){
-		Sleep(60);
-		printf(" %c",name[j]);
-	}
-	for(j=0;j<=16;j++){
-		Sleep(50);
-		printf("\xDB");
-	}
+    z = strlen(name);
+    for (j = 0; j <= 16; j++)
+    {
+        Sleep(50);
+        printf("\xDB");
+    }
+    for (j = 0; j <= z; j++)
+    {
+        Sleep(60);
+        printf(" %c", name[j]);
+    }
+    for (j = 0; j <= 16; j++)
+    {
+        Sleep(50);
+        printf("\xDB");
+    }
     printf("\n\n");
     printf("    Enter First Name: ");
     fflush(stdin);
@@ -136,7 +140,7 @@ void createaccount()
     scanf("%s", U.emailid);
     printf("\n");
     printf("    Enter Phone Num - ");
-    scanf("%d", &U.phnum);
+    scanf("%lf", &U.phnum);
     printf("\n");
     printf("    Are you an Owner(o) or a Tenant(t) - ");
     scanf("%s", U.position);
@@ -207,32 +211,230 @@ void writePassword(char pss[20])
         }
     }
 }
+void addDetails(char pss[20])
+{
+    system("cls");
+    gotoxy(31, 4);
+    printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB NEW SECTION \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
+    FILE *fptr;
+    char nameofapp[100];
+    char locality[100];
+    int price;
+    int bhk;
+    char ldaApp[100];
+    char parking[100];
+    fptr = fopen("houses.txt", "ab+"); // ab+ gives us the ability of writing the function and add the second data in the existing one...
+    if (fptr == NULL)
+    {
+        printf("Failed to create the required file.");
+    }
+    else
+    {
+        char temp;
+        gotoxy(31, 6);
+        printf("Name of the Apartment:\t");
+        // gotoxy(52,6);
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%[^\n]", nameofapp);
+        gotoxy(31, 7);
+        printf("Locality:\t");
+        // gotoxy(52,7);
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%[^\n]", locality);
+        // scanf("%[^\n]", locality);
+        gotoxy(31, 8);
+        printf("BHK:\t");
+        // gotoxy(52,9);
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%d", &bhk);
+        gotoxy(31, 9);
+        printf("Is it LDA Approved(y/n):\t");
+        // gotoxy(57,10);
+        // scanf("%c", &temp); //temp statement to clear buffer
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%[^\n]", ldaApp);
+        gotoxy(31, 10);
+        printf("Does it have any parking area (y/n):\t");
+        // gotoxy(70,11);
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%[^\n]", parking);
+        gotoxy(31, 11);
+        printf("Price:\t");
+        // gotoxy(52,8);
+        scanf("%c", &temp); // temp statement to clear buffer
+        scanf("%d", &price);
+        // printf("%d", bhk);
+
+        fprintf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
+    }
+    fclose(fptr);
+    system("cls");
+    char string[200] = "House details added successfully. Tenants will reach to you shortly.";
+    int z = strlen(string);
+    for (int i = 0; i <= z; i++)
+    {
+        Sleep(60);
+        printf(" %c", string[i]);
+    }
+}
+void searchDetails()
+{
+    struct user u;
+    FILE *fptr, *fp;
+    int flag = 0;
+    int res;
+    char pss[20];
+    char nameofapp[100];
+    char locality[100];
+    int price;
+    char ldaApp[100];
+    char parking[100];
+    int bhk;
+    int bhk1;
+    int ul;
+    int ll;
+    char name1[100];
+    system("cls");
+    fflush(stdin);
+    // gotoxy(18, 2);
+    printf("\xDB\xDB\xDB Search city, locality, project/ society, landmarks:: ");
+    scanf("%[^\n]", name1);
+    // printf("%s", name1);
+    printf("\n");
+    printf("\xDB\xDB\xDB Price lower limit:: ");
+    scanf("%d", &ll);
+    printf("\n");
+    // printf("%d", ll);
+    printf("\xDB\xDB\xDB Price upper limit:: ");
+    scanf("%d", &ul);
+    printf("\n");
+    // printf("%d", ul);
+    printf("\xDB\xDB\xDB How many number of bedrooms you want(BHK):: ");
+    scanf("%d", &bhk1);
+    printf("\n");
+    // printf("%d", bhk1);
+    fptr = fopen("houses.txt", "r");
+    // fflush(stdin);
+    while (fscanf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
+    {
+        res = strcmp(locality, name1);
+
+        if (res == 0 || price <= ul || price >= ll || bhk1 == bhk)
+        {
+            // gotoxy(39, 4);
+            printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB Record Found \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
+            printf("\n");
+            // gotoxy(28, 5);
+            printf("----------------------------------------");
+            printf("\n");
+            // gotoxy(31, 6.5);
+            printf("\xB3\xB2\xB2\xB2 Name of the Apartment:\t%s", nameofapp);
+            printf("\n");
+            // gotoxy(31, 7);
+            printf("\xB3\xB2\xB2\xB2 Locality:\t%s", locality);
+            printf("\n");
+            // gotoxy(31, 8);
+            printf("\xB3\xB2\xB2\xB2 Price:\t%d", price);
+            printf("\n");
+            // gotoxy(31, 9);
+            printf("\xB3\xB2\xB2\xB2 BHK:\t%d", bhk);
+            printf("\n");
+            // gotoxy(31, 10);
+            printf("\xB3\xB2\xB2\xB2 LDA Approved (y/n) :\t%s", ldaApp);
+            printf("\n");
+            // gotoxy(31, 11);
+            printf("\xB3\xB2\xB2\xB2 Parking Lot ? \t%s", parking);
+            printf("\n\n");
+            
+
+            // gotoxy(31,14);
+            printf("OWNER  DETAILS");
+            printf("\n");
+            // gotoxy(31,15);
+            fp = fopen("owner.txt", "r");
+            while (fread(&u, sizeof(struct user), 1, fp))
+            {
+                if (strcmp(pss, u.pass) == 0)
+                {
+                    // gotoxy(31,17);
+                    printf("\xB3\xB2\xB2\xB2 Name of the Owner:\t%s %s", u.fname, u.lname);
+                    printf("\n");
+                    // gotoxy(31,18);
+                    printf("\xB3\xB2\xB2\xB2 Phone Number:\t%lf", u.phnum);
+                    printf("\n");
+                    // gotoxy(31,19);
+                    printf("\xB3\xB2\xB2\xB2 Email-id:\t%s", u.emailid);
+                    printf("\n\n");
+                    printf("----------------------------------------");
+                }
+            }
+            flag = 1;
+
+            // gotoxy(31,21);
+
+            // flag = 1;
+            // Sleep(1000);
+            fclose(fp);
+            printf("\n");
+            // // gotoxy(18, 12);
+            // printf("Enter any key for menu option.");
+            // while (getch())
+            // {
+            // 	menu();
+            // }
+        }
+    }
+    if (flag == 0)
+    {
+        system("cls");
+        gotoxy(39, 4);
+
+        char string[200] = "No record found";
+        int z = strlen(string);
+        for (int i = 0; i <= z; i++)
+        {
+            Sleep(60);
+            printf(" %c", string[i]);
+        }
+        login();
+    }
+
+    fclose(fptr);
+    while (getch())
+    {
+        main();
+    }
+    
+}
 void login()
 {
     char uname[20], pss[20];
-    int z,j;
+    int z, j;
     FILE *fp1;
     struct user u;
     system("cls");
-    gotoxy(53, 3);
+    gotoxy(45, 3);
     char name[50] = "LOGIN TO YOUR ACCOUNT";
-    z=strlen(name);
-	for(j=0;j<=16;j++){
-		Sleep(50);
-		printf("\xDB");
-	}
-	for(j=0;j<=z;j++){
-		Sleep(60);
-		printf(" %c",name[j]);
-	}
-	for(j=0;j<=16;j++){
-		Sleep(50);
-		printf("\xDB");
-	}
-    gotoxy(53, 5);
+    z = strlen(name);
+    for (j = 0; j <= 16; j++)
+    {
+        Sleep(50);
+        printf("\xDB");
+    }
+    for (j = 0; j <= z; j++)
+    {
+        Sleep(60);
+        printf(" %c", name[j]);
+    }
+    for (j = 0; j <= 16; j++)
+    {
+        Sleep(50);
+        printf("\xDB");
+    }
+    gotoxy(45, 5);
     printf(" Enter Username: ");
     scanf("%s", uname);
-    gotoxy(53, 7);
+    gotoxy(45, 7);
     printf(" Enter Password: ");
     writePassword(pss);
     /// Reading from file
@@ -243,6 +445,8 @@ void login()
         return;
     }
     int flag = 0;
+    char str[10];
+    char *ptr = str;
     while (fread(&u, sizeof(struct user), 1, fp1))
     {
         if (strcmp(uname, u.username) == 0 && strcmp(pss, u.pass) == 0)
@@ -251,9 +455,8 @@ void login()
             printf(" \n Username And Password is Correct.\n");
             printf(" Press any key to continue...");
             getch();
-            gotoxy(57, 12);
-            char str[10];
-            char *ptr = str;
+            gotoxy(45, 12);
+
             if (u.position[0] == 'o')
             {
                 ptr = "Owner";
@@ -267,13 +470,68 @@ void login()
                 printf("Invalid choice\n");
                 exit(0);
             }
-
-            printf(" Welcome %s %s. ", u.fname, u.lname);
-            printf("You are logged in as %s", ptr);
+            printf("\xB3\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME %s %s. YOU ARE LOGGED IN AS %s \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB3", u.fname, u.lname, ptr);
+            // printf(" Welcome %s %s. ", u.fname, u.lname);
+            // printf("You are logged in as %s", ptr);
             getch();
+            printf("\n");
+            gotoxy(45, 15);
+            if (ptr == "Tenant")
+            {
+                int k;
+                printf("1. Search for home:  \n");
+                gotoxy(45, 18);
+                printf("2. Exit:  \n");
+                printf("\n");
+                // printf("4. :  \n");
+                gotoxy(45, 21);
+                printf("Enter your choice :  ");
+                scanf("%d", &k);
+                switch (k)
+                {
+                case 2:
+                    exit(0);
+                    break;
+                case 1:
+                    searchDetails();
+                    break;
+                default:
+                    printf("Invalid choice !");
+                    exit(0);
+                    break;
+                }
+            }
+            else
+            {
+                int k;
+                printf("1. Add home details:  \n");
+                gotoxy(45, 18);
+                printf("2. Exit:  \n");
+                printf("\n");
+                // printf("4. :  \n");
+                gotoxy(45, 21);
+                printf("Enter your choice :  ");
+                scanf("%d", &k);
+                switch (k)
+                {
+                case 1:
+                    addDetails(u.pass);
+                    break;
+
+                case 2:
+                    exit(0);
+
+                default:
+                    printf("Invalid choice");
+                    login();
+                }
+            }
             break;
         }
     }
+
+    int choice;
+
     if (flag == 0)
     {
         printf("\n Username And Password is Incorrect.\n\n");

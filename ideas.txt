@@ -1,0 +1,30 @@
+{tenant2.txt}
+Welcome Owner, I hope you are doing great please give the details of your house so the tenants can easily reach to you. 
+1.  Add a home
+1.1 Give your house details(5){houses.txt}
+1.1.1-  Name of the Apartments
+1.1.2-  Price --- Tenant {price range}
+1.1.3-  Locality -- Tenant{Search city, locality, project/ society, landmarks}
+1.1.4 - BHK
+1.1.5 - LDA approved (y/n) -
+1.1.6 - Parking - (y/n) -  
+2. Search for Tenants - {open tenant2.txt}
+2.1 send a message- hi i got to know that you are interested
+3. Exit
+
+----------------------------------------------------
+
+Welcome Tenant,
+
+
+1.Search for home
+1.1 - {Search city, locality, project/ society, landmarks}
+1.2 - Price lower limit - 
+1.3 - Price Upper limit - 
+1.4 - BHK
+1.5 - How many members are there ? 
+1.6 - Are you really interested in buying - (y/n){open houses.txt}
+
+2. Messages {open {tenant-messages.txt}}
+3. Exit
+{tenant-messages.txt}
