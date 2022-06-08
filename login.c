@@ -4,16 +4,14 @@
 #include <windows.h>
 #include <string.h>
 #include <stdlib.h>
-// #define ENTER 13
-// #define TAB 9
-// #define BCKSPC 8
+
 void verify();
 int menu();
 void createaccount();
 void login();
-// int createaccount();
+void searchDetails();
 void gotoxy(int, int);
-void addDetails();
+// void addDetails(char);
 FILE *fp;
 struct user u, U;
 int choice;
@@ -31,10 +29,10 @@ struct user
 };
 int main()
 {
-    system("color 0b");
+    // system("color 02");
     while (1)
     {
-        switch (menu())
+        switch(menu())
         {
         case 1:
             createaccount();
@@ -83,7 +81,7 @@ void takePassword(char pwd[20])
     }
     // printf("%s", pwd);
 }
-int menu()
+int menu() // -- returns 2 if 2 is pressed
 {
     int ch;
     printf("1. Signup:  \n");
@@ -96,13 +94,13 @@ int menu()
 }
 void createaccount()
 {
-    struct user U;
+    struct user U; 
     FILE *fp, *fp2;
     int z, j;
     system("cls");
     gotoxy(45, 3);
     // gotoxy(53, 3);
-    char name[50] = "CREATE ACCOUNT";
+    char name[50] = "CREATE ACCOUNT"; 
     z = strlen(name);
     for (j = 0; j <= 16; j++)
     {
@@ -129,8 +127,15 @@ void createaccount()
     printf("\n");
     printf("    Enter Age - ");
     scanf("%d", &U.age);
+    if(!(U.age > 0 && U.age < 200)){
+        printf("\n");
+        printf("Enter a valid age");
+        printf("\n");
+        Sleep(1000);
+        createaccount();
+    }
     printf("\n");
-    printf("    Enter Username: (remember) ");
+    printf("    Enter Username : (remember/ without spaces) ");
     scanf("%s", U.username);
     printf("\n");
     printf("    Enter Password: (remember) ");
@@ -138,9 +143,34 @@ void createaccount()
     printf("\n\n");
     printf("    Enter emailID - ");
     scanf("%s", U.emailid);
+    int flag = 0;
+    int k= strlen(U.emailid);
+    for (int i = 0; i < z; i++)
+    {
+        if(U.emailid[i]=='@' || U.emailid[i]=='.'){
+            flag++;
+        }
+    }
+    if (flag<2)
+    {
+        printf("\nPlease enter a valid email id. \n");
+        Sleep(1000);
+        createaccount();
+    }
+    
+    
+    
     printf("\n");
     printf("    Enter Phone Num - ");
     scanf("%lf", &U.phnum);
+    if(!(U.phnum > 1000000000 && U.phnum < 9999999999)){
+        printf("\n");
+        printf("Please enter a valid phone number.");
+        printf("\n");
+        Sleep(1000);
+        createaccount();
+
+    }
     printf("\n");
     printf("    Are you an Owner(o) or a Tenant(t) - ");
     scanf("%s", U.position);
@@ -236,17 +266,20 @@ void addDetails(char pss[20])
         // gotoxy(52,6);
         scanf("%c", &temp); // temp statement to clear buffer
         scanf("%[^\n]", nameofapp);
+        // fgets(nameofapp, 200, stdin);
         gotoxy(31, 7);
         printf("Locality:\t");
         // gotoxy(52,7);
         scanf("%c", &temp); // temp statement to clear buffer
         scanf("%[^\n]", locality);
+        // fgets(locality, 200, stdin);
         // scanf("%[^\n]", locality);
         gotoxy(31, 8);
         printf("BHK:\t");
         // gotoxy(52,9);
         scanf("%c", &temp); // temp statement to clear buffer
         scanf("%d", &bhk);
+        // fgets(locality, 200, stdin);
         gotoxy(31, 9);
         printf("Is it LDA Approved(y/n):\t");
         // gotoxy(57,10);
@@ -265,7 +298,7 @@ void addDetails(char pss[20])
         scanf("%d", &price);
         // printf("%d", bhk);
 
-        fprintf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
+        fprintf(fptr, "%s\t%s\t%s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
     }
     fclose(fptr);
     system("cls");
@@ -276,6 +309,7 @@ void addDetails(char pss[20])
         Sleep(60);
         printf(" %c", string[i]);
     }
+    Sleep(1000);
 }
 void searchDetails()
 {
@@ -315,14 +349,23 @@ void searchDetails()
     // printf("%d", bhk1);
     fptr = fopen("houses.txt", "r");
     // fflush(stdin);
-    while (fscanf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
+    int i =0;
+    while (fscanf(fptr, "%s\t%s\t%s %s %s %d %d\n", 
+    nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
     {
+        // printf("%s", locality);
+        // Sleep(5000);
         res = strcmp(locality, name1);
 
         if (res == 0 && price <= ul && price >= ll && bhk1 == bhk)
         {
             // gotoxy(39, 4);
-            printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB Record Found \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
+            if(i==0){
+                printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB Record(s) Found \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
+                i++;
+
+            }
+            
             printf("\n");
             // gotoxy(28, 5);
             printf("----------------------------------------");
@@ -396,6 +439,7 @@ void searchDetails()
             Sleep(60);
             printf(" %c", string[i]);
         }
+        Sleep(1000);
         login();
     }
 
