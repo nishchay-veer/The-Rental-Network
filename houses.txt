@@ -1,2 +1,3 @@
-parswanath hazratganj y y 2003 13000 2
-ganesh hazratganj y n 1993 12000 2
+ganesh hazratganj y y 1965 13000 2
+krishna hazratganj y n 1993 12000 2
+wahera chowk y y password 10000 3

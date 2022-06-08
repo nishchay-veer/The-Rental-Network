@@ -319,7 +319,7 @@ void searchDetails()
     {
         res = strcmp(locality, name1);
 
-        if (res == 0 || price <= ul || price >= ll || bhk1 == bhk)
+        if (res == 0 && price <= ul && price >= ll && bhk1 == bhk)
         {
             // gotoxy(39, 4);
             printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB Record Found \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
@@ -360,7 +360,7 @@ void searchDetails()
                     printf("\xB3\xB2\xB2\xB2 Name of the Owner:\t%s %s", u.fname, u.lname);
                     printf("\n");
                     // gotoxy(31,18);
-                    printf("\xB3\xB2\xB2\xB2 Phone Number:\t%lf", u.phnum);
+                    printf("\xB3\xB2\xB2\xB2 Phone Number:\t%0.lf", u.phnum);
                     printf("\n");
                     // gotoxy(31,19);
                     printf("\xB3\xB2\xB2\xB2 Email-id:\t%s", u.emailid);
