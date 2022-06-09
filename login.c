@@ -1,4 +1,4 @@
-// Login System Ready For Making Video
+
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
@@ -29,7 +29,6 @@ struct user
 };
 int main()
 {
-    // system("color 02");
     while (1)
     {
         switch(menu())
@@ -469,16 +468,16 @@ void addTenantsInfo(struct user tenant, struct user owner){
     char occ[50], isMarried[50];
     int duration, members;
     printf("\nOWNER WANTS TO KNOW \n");
-    printf("Your Occupation::");
+    printf("Your Occupation:: ");
     scanf("%s", occ);
     printf("\n");
-    printf("Are you married ? (y/n):: ");
+    printf("Are you married ? (y/n) ");
     scanf("%s", isMarried);
     printf("\n");
-    printf("How many members are there ?:: ");
+    printf("How many members will be there ? ");
     scanf("%d", &members);
     printf("\n");
-    printf("Duration for which you want this place(in months):: ");
+    printf("For how many months you want this place to live ? ");
     scanf("%d", &duration);
     printf("\n");
     fptr = fopen("tenants-info.txt", "ab+");
@@ -604,7 +603,7 @@ void login()
                 int k;
                 printf("1. Add home details:  \n");
                 gotoxy(45, 17);
-                printf("2. Search for tenants:  \n");
+                printf("2. Tenant Requests:  \n");
                 gotoxy(45, 19);
                 printf("3. Exit:  \n");
                 printf("\n");
