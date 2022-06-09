@@ -10,10 +10,10 @@ void createaccount();
 void login();
 void searchDetails();
 
-void gotoxy(int , int);
+void gotoxy(int, int);
 FILE *fp;
 struct user u, U;
-void addTenantsInfo(struct user , struct user);
+void addTenantsInfo(struct user, struct user);
 int choice;
 char fname[20], lname[20], uname[20], pss[20], C;
 struct user
@@ -27,11 +27,22 @@ struct user
     int age;
     char position[1];
 };
+struct tenantInfo
+{
+    char opass[50];
+    char ousername[50];
+    char tenantname[50];
+    char tenantpass[50];
+    char occ[20];
+    int members;
+    int duration;
+    char isMarried[20];
+};
 int main()
 {
     while (1)
     {
-        switch(menu())
+        switch (menu())
         {
         case 1:
             createaccount();
@@ -80,7 +91,7 @@ void takePassword(char pwd[20])
     }
     // printf("%s", pwd);
 }
-int menu() 
+int menu()
 {
     int ch;
     printf("1. Signup:  \n");
@@ -93,13 +104,13 @@ int menu()
 }
 void createaccount()
 {
-    struct user U; 
+    struct user U;
     FILE *fp, *fp2;
     int z, j;
     system("cls");
     gotoxy(45, 3);
     // gotoxy(53, 3);
-    char name[50] = "CREATE ACCOUNT"; 
+    char name[50] = "CREATE ACCOUNT";
     z = strlen(name);
     for (j = 0; j <= 16; j++)
     {
@@ -126,7 +137,8 @@ void createaccount()
     printf("\n");
     printf("    Enter Age - ");
     scanf("%d", &U.age);
-    if(!(U.age > 0 && U.age < 200)){
+    if (!(U.age > 0 && U.age < 200))
+    {
         printf("\n");
         printf("Enter a valid age");
         printf("\n");
@@ -139,39 +151,38 @@ void createaccount()
     // scanf("%c", &temp);
     scanf("%s", U.username);
     printf("\n");
-    
+
     printf("    Enter Password: (remember) ");
     takePassword(U.pass);
     printf("\n\n");
     printf("    Enter emailID - ");
     scanf("%s", U.emailid);
     int flag = 0;
-    int k= strlen(U.emailid);
+    int k = strlen(U.emailid);
     for (int i = 0; i < k; i++)
     {
-        if(U.emailid[i]=='@' || U.emailid[i]=='.'){
+        if (U.emailid[i] == '@' || U.emailid[i] == '.')
+        {
             flag++;
         }
     }
-    if (flag<2)
+    if (flag < 2)
     {
         printf("\nPlease enter a valid email id. \n");
         Sleep(1000);
         createaccount();
     }
-    
-    
-    
+
     printf("\n");
     printf("    Enter Phone Num - ");
     scanf("%lf", &U.phnum);
-    if(!(U.phnum > 1000000000 && U.phnum < 9999999999)){
+    if (!(U.phnum > 1000000000 && U.phnum < 9999999999))
+    {
         printf("\n");
         printf("Please enter a valid phone number.");
         printf("\n");
         Sleep(1000);
         createaccount();
-
     }
     printf("\n");
     printf("    Are you an Owner(o) or a Tenant(t) - ");
@@ -314,6 +325,84 @@ void addDetails(char pss[20])
     }
     Sleep(1000);
 }
+void tenantRequests(struct user u)
+{
+    system("cls");
+    struct tenantInfo ti;
+    struct user f;
+    FILE *fp1, *fp2;
+    fp1 = fopen("tenants-info.txt", "r");
+    fp2 = fopen("tenant.txt", "r");
+    int flag = 0;
+    if (fp1 == NULL)
+    {
+        printf("\"File not found\"");
+        return;
+    }
+    while (fread(&ti, sizeof(struct tenantInfo), 1, fp1))
+    {
+        if (strcmp(u.pass, ti.opass) == 0 && strcmp(u.username, ti.ousername) == 0)
+        {
+            while (fread(&f, sizeof(struct user), 1, fp2))
+            {
+                if (strcmp(f.pass, ti.tenantpass) == 0 && strcmp(f.username, ti.tenantname) == 0)
+                {
+                    printf("\n");
+                    // gotoxy(28, 5);
+                    printf("----------------------------------------");
+                    printf("\n");
+                    // gotoxy(31, 6.5);
+                    printf("\xB3\xB2\xB2\xB2 Name of the Tenant:\t%s %s", f.fname, f.lname);
+                    printf("\n");
+                    // gotoxy(31, 7);
+                    printf("\xB3\xB2\xB2\xB2 Age:\t%d", f.age);
+                    printf("\n");
+                    // gotoxy(31, 8);
+                    printf("\xB3\xB2\xB2\xB2 Occupation:\t%s", ti.occ);
+                    printf("\n");
+                    // gotoxy(31, 9);
+                    printf("\xB3\xB2\xB2\xB2 Married ? (y/n) :\t%s", ti.isMarried);
+                    printf("\n");
+                    printf("\xB3\xB2\xB2\xB2 Members in the family:\t%d", ti.members);
+                    printf("\n");
+                    // gotoxy(31, 10);
+                    // gotoxy(31, 11);
+                    printf("\xB3\xB2\xB2\xB2 Duration for which he/she wants your house ? \t%d", ti.duration);
+                    printf("\n\n");
+                    printf("CONTACT DETAILS\n");
+                    printf("\xB3\xB2\xB2\xB2 Phone Number:\t%0.lf", f.phnum);
+                    printf("\n");
+                    printf("\xB3\xB2\xB2\xB2 Email-ID:\t%s",f.emailid);
+                    printf("\n");
+                    printf("\n");
+                    // gotoxy(28, 5);
+                    printf("----------------------------------------");
+                    flag++;
+
+                }
+            }
+            fclose(fp2);
+        }
+    }
+    fclose(fp1);
+    if (flag == 0)
+    {
+        system("cls");
+        gotoxy(39, 4);
+
+        char string[200] = "No requests found :(";
+        int z = strlen(string);
+        for (int i = 0; i <= z; i++)
+        {
+            Sleep(60);
+            printf(" %c", string[i]);
+        }
+        Sleep(1000);
+        login();
+    }
+    getch();
+    login();
+}
 void searchDetails(struct user U)
 {
     struct user u;
@@ -352,9 +441,9 @@ void searchDetails(struct user U)
     // printf("%d", bhk1);
     fptr = fopen("houses.txt", "r");
     // fflush(stdin);
-    int i =0;
-    while (fscanf(fptr, "%s %s %s %s %s %d %d\n", 
-    nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
+    int i = 0;
+    while (fscanf(fptr, "%s %s %s %s %s %d %d\n",
+                  nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
     {
         // printf("%s", locality);
         // Sleep(5000);
@@ -363,12 +452,12 @@ void searchDetails(struct user U)
         if (res == 0 && price <= ul && price >= ll && bhk1 == bhk)
         {
             // gotoxy(39, 4);
-            if(i==0){
+            if (i == 0)
+            {
                 printf("\xB3\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB Record(s) Found \xDB\xDB\xDB\xDB\xDB\xDB\xDB\xDB\xB3");
                 i++;
-
             }
-            
+
             printf("\n");
             // gotoxy(28, 5);
             printf("----------------------------------------");
@@ -391,7 +480,6 @@ void searchDetails(struct user U)
             // gotoxy(31, 11);
             printf("\xB3\xB2\xB2\xB2 Parking Lot ? \t%s", parking);
             printf("\n\n");
-            
 
             // gotoxy(31,14);
             printf("OWNER  DETAILS");
@@ -449,45 +537,53 @@ void searchDetails(struct user U)
     fclose(fptr);
     char firstname[50], lastname[50];
     printf("\n Enter the name of the owner whom you want to connect with or press y to go to main menu : ");
-    if(getch()=='y'){
+    if (getch() == 'y')
+    {
         printf("\n");
         main();
     }
     scanf("%s %s", firstname, lastname);
-    
+
     fp = fopen("owner.txt", "r");
-    while (fread(&u, sizeof(struct user), 1, fp)){
-        if ((strcmp(firstname, u.fname) == 0) && (strcmp(lastname, u.lname) == 0)){
+    while (fread(&u, sizeof(struct user), 1, fp))
+    {
+        if ((strcmp(firstname, u.fname) == 0) && (strcmp(lastname, u.lname) == 0))
+        {
             addTenantsInfo(U, u);
         }
     }
-    
 }
-void addTenantsInfo(struct user tenant, struct user owner){
+void addTenantsInfo(struct user tenant, struct user owner)
+{
     FILE *fptr;
-    char occ[50], isMarried[50];
-    int duration, members;
+    struct tenantInfo tp;
     printf("\nOWNER WANTS TO KNOW \n");
     printf("Your Occupation:: ");
-    scanf("%s", occ);
+    scanf("%s", tp.occ);
     printf("\n");
     printf("Are you married ? (y/n) ");
-    scanf("%s", isMarried);
+    scanf("%s", tp.isMarried);
     printf("\n");
     printf("How many members will be there ? ");
-    scanf("%d", &members);
+    scanf("%d", &tp.members);
     printf("\n");
     printf("For how many months you want this place to live ? ");
-    scanf("%d", &duration);
+    scanf("%d", &tp.duration);
     printf("\n");
+    strcpy(tp.opass, owner.pass);
+    strcpy(tp.tenantpass, tenant.pass);
+    strcpy(tp.tenantname, tenant.username);
+    strcpy(tp.ousername, owner.username);
+
     fptr = fopen("tenants-info.txt", "ab+");
     if (fptr == NULL)
     {
         printf("Failed to create the required file.");
     }
-    else{
-        fprintf(fptr, "%s %s %s %s %s %s %d %d\n", tenant.username, tenant.pass, owner.username, owner.pass, occ, isMarried, duration, members);
-
+    else
+    {
+        fwrite(&tp, sizeof(struct tenantInfo), 1, fptr);
+        // fclose(fptr);
     }
     fclose(fptr);
     system("cls");
@@ -500,8 +596,8 @@ void addTenantsInfo(struct user tenant, struct user owner){
     }
     Sleep(1000);
     printf("\n");
+    system("cls");
     main();
-
 }
 void login()
 {
@@ -617,7 +713,7 @@ void login()
                     addDetails(u.pass);
                     break;
                 case 2:
-                    exit(0);
+                    tenantRequests(u);
                 case 3:
                     exit(0);
 
