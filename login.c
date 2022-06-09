@@ -16,6 +16,16 @@ struct user u, U;
 void addTenantsInfo(struct user, struct user);
 int choice;
 char fname[20], lname[20], uname[20], pss[20], C;
+struct house
+{
+    char name[50];
+    char ldaApp[2];
+    char parkingLot[2];
+    char locality[50];
+    int bhk;
+    int price;
+    char pss[20];
+};
 struct user
 {
     char pass[20];
@@ -255,7 +265,10 @@ void writePassword(char pss[20])
         }
     }
 }
-void addDetails(char pss[20])
+// void input(char *x , char *y){
+//     *x = *y;
+// }
+void addDetails(char *ptr)
 {
     system("cls");
     gotoxy(31, 4);
@@ -274,45 +287,52 @@ void addDetails(char pss[20])
     }
     else
     {
+        struct house H;
         char temp;
         gotoxy(31, 6);
         printf("Name of the Apartment:\t");
         // gotoxy(52,6);
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%[^\n]", nameofapp);
+        scanf("%[^\n]", H.name);
         // fgets(nameofapp, 200, stdin);
         gotoxy(31, 7);
         printf("Locality:\t");
         // gotoxy(52,7);
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%[^\n]", locality);
+        scanf("%[^\n]", H.locality);
         // fgets(locality, 200, stdin);
         // scanf("%[^\n]", locality);
         gotoxy(31, 8);
         printf("BHK:\t");
         // gotoxy(52,9);
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%d", &bhk);
+        scanf("%d", &H.bhk);
         // fgets(locality, 200, stdin);
         gotoxy(31, 9);
         printf("Is it LDA Approved(y/n):\t");
         // gotoxy(57,10);
         // scanf("%c", &temp); //temp statement to clear buffer
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%[^\n]", ldaApp);
+        scanf("%[^\n]", H.ldaApp);
         gotoxy(31, 10);
         printf("Does it have any parking area (y/n):\t");
         // gotoxy(70,11);
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%[^\n]", parking);
+        scanf("%[^\n]", H.parkingLot);
         gotoxy(31, 11);
         printf("Price:\t");
         // gotoxy(52,8);
         scanf("%c", &temp); // temp statement to clear buffer
-        scanf("%d", &price);
-        // printf("%d", bhk);
+        scanf("%d", &H.price);
+        // char *ptr = pss;
+        strcpy(H.pss, ptr);
+        // Sleep(3000);
+        // strcpy(H.pss, *ptr);
+        // printf("%s", H.pss);
+        // Sleep(5000);
 
-        fprintf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
+        fwrite(&H, sizeof(struct house), 1, fptr);
+        fclose(fptr);
     }
     fclose(fptr);
     system("cls");
@@ -324,15 +344,18 @@ void addDetails(char pss[20])
         printf(" %c", string[i]);
     }
     Sleep(1000);
+    login();
 }
 void tenantRequests(struct user u)
 {
+    // printf("%d", u.age);
+    // Sleep(5000);
     system("cls");
     struct tenantInfo ti;
     struct user f;
     FILE *fp1, *fp2;
     fp1 = fopen("tenants-info.txt", "r");
-    fp2 = fopen("tenant.txt", "r");
+
     int flag = 0;
     if (fp1 == NULL)
     {
@@ -343,6 +366,7 @@ void tenantRequests(struct user u)
     {
         if (strcmp(u.pass, ti.opass) == 0 && strcmp(u.username, ti.ousername) == 0)
         {
+            fp2 = fopen("tenant.txt", "r");
             while (fread(&f, sizeof(struct user), 1, fp2))
             {
                 if (strcmp(f.pass, ti.tenantpass) == 0 && strcmp(f.username, ti.tenantname) == 0)
@@ -372,13 +396,13 @@ void tenantRequests(struct user u)
                     printf("CONTACT DETAILS\n");
                     printf("\xB3\xB2\xB2\xB2 Phone Number:\t%0.lf", f.phnum);
                     printf("\n");
-                    printf("\xB3\xB2\xB2\xB2 Email-ID:\t%s",f.emailid);
+                    printf("\xB3\xB2\xB2\xB2 Email-ID:\t%s", f.emailid);
                     printf("\n");
-                    printf("\n");
+
                     // gotoxy(28, 5);
                     printf("----------------------------------------");
+                    printf("\n");
                     flag++;
-
                 }
             }
             fclose(fp2);
@@ -397,7 +421,7 @@ void tenantRequests(struct user u)
             Sleep(60);
             printf(" %c", string[i]);
         }
-        Sleep(1000);
+        Sleep(2000);
         login();
     }
     getch();
@@ -405,6 +429,7 @@ void tenantRequests(struct user u)
 }
 void searchDetails(struct user U)
 {
+    struct house h;
     struct user u;
     FILE *fptr, *fp;
     int flag = 0;
@@ -442,14 +467,12 @@ void searchDetails(struct user U)
     fptr = fopen("houses.txt", "r");
     // fflush(stdin);
     int i = 0;
-    while (fscanf(fptr, "%s %s %s %s %s %d %d\n",
-                  nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
-    {
+    while (fread(&h, sizeof(struct house),1,fptr)){
         // printf("%s", locality);
         // Sleep(5000);
-        res = strcmp(locality, name1);
+        res = strcmp(h.locality, name1);
 
-        if (res == 0 && price <= ul && price >= ll && bhk1 == bhk)
+        if (res == 0 && h.price <= ul && h.price >= ll && bhk1 == h.bhk)
         {
             // gotoxy(39, 4);
             if (i == 0)
@@ -463,22 +486,22 @@ void searchDetails(struct user U)
             printf("----------------------------------------");
             printf("\n");
             // gotoxy(31, 6.5);
-            printf("\xB3\xB2\xB2\xB2 Name of the Apartment:\t%s", nameofapp);
+            printf("\xB3\xB2\xB2\xB2 Name of the Apartment:\t%s", h.name);
             printf("\n");
             // gotoxy(31, 7);
-            printf("\xB3\xB2\xB2\xB2 Locality:\t%s", locality);
+            printf("\xB3\xB2\xB2\xB2 Locality:\t%s", h.locality);
             printf("\n");
             // gotoxy(31, 8);
-            printf("\xB3\xB2\xB2\xB2 Price:\t%d", price);
+            printf("\xB3\xB2\xB2\xB2 Price:\t%d", h.price);
             printf("\n");
             // gotoxy(31, 9);
-            printf("\xB3\xB2\xB2\xB2 BHK:\t%d", bhk);
+            printf("\xB3\xB2\xB2\xB2 BHK:\t%d", h.bhk);
             printf("\n");
             // gotoxy(31, 10);
-            printf("\xB3\xB2\xB2\xB2 LDA Approved (y/n) :\t%s", ldaApp);
+            printf("\xB3\xB2\xB2\xB2 LDA Approved (y/n) :\t%s", h.ldaApp);
             printf("\n");
             // gotoxy(31, 11);
-            printf("\xB3\xB2\xB2\xB2 Parking Lot ? \t%s", parking);
+            printf("\xB3\xB2\xB2\xB2 Parking Lot ? \t%s", h.parkingLot);
             printf("\n\n");
 
             // gotoxy(31,14);
@@ -488,7 +511,7 @@ void searchDetails(struct user U)
             fp = fopen("owner.txt", "r");
             while (fread(&u, sizeof(struct user), 1, fp))
             {
-                if (strcmp(pss, u.pass) == 0)
+                if (strcmp(h.pss, u.pass) == 0)
                 {
                     // gotoxy(31,17);
                     printf("\xB3\xB2\xB2\xB2 Name of the Owner:\t%s %s", u.fname, u.lname);
@@ -523,7 +546,7 @@ void searchDetails(struct user U)
         system("cls");
         gotoxy(39, 4);
 
-        char string[200] = "No record found";
+        char string[200] = "No record found :(";
         int z = strlen(string);
         for (int i = 0; i <= z; i++)
         {
@@ -553,6 +576,7 @@ void searchDetails(struct user U)
         }
     }
 }
+
 void addTenantsInfo(struct user tenant, struct user owner)
 {
     FILE *fptr;
