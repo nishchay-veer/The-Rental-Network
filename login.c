@@ -23,7 +23,7 @@ struct user
     char fname[20];
     char lname[20];
     double phnum;
-    char emailid[40];
+    char emailid[100];
     int age;
     char position[1];
 };
@@ -136,8 +136,11 @@ void createaccount()
     }
     printf("\n");
     printf("    Enter Username : (remember/ without spaces) ");
+    // char temp;
+    // scanf("%c", &temp);
     scanf("%s", U.username);
     printf("\n");
+    
     printf("    Enter Password: (remember) ");
     takePassword(U.pass);
     printf("\n\n");
@@ -145,7 +148,7 @@ void createaccount()
     scanf("%s", U.emailid);
     int flag = 0;
     int k= strlen(U.emailid);
-    for (int i = 0; i < z; i++)
+    for (int i = 0; i < k; i++)
     {
         if(U.emailid[i]=='@' || U.emailid[i]=='.'){
             flag++;
@@ -186,7 +189,7 @@ void createaccount()
         fwrite(&U, sizeof(struct user), 1, fp2);
         fclose(fp2);
     }
-    if (U.position[0] == 't')
+    else if (U.position[0] == 't')
     {
         fp2 = fopen("tenant.txt", "ab+");
         if (fp2 == NULL)
@@ -201,7 +204,7 @@ void createaccount()
     if (fp == NULL)
     {
         printf("\nError opened file\n");
-        exit(1);
+        exit(0);
     }
     fwrite(&U, sizeof(struct user), 1, fp);
     fclose(fp);
@@ -213,6 +216,7 @@ void createaccount()
     getch();
 
     system("cls");
+    main();
 }
 void writePassword(char pss[20])
 {
@@ -298,7 +302,7 @@ void addDetails(char pss[20])
         scanf("%d", &price);
         // printf("%d", bhk);
 
-        fprintf(fptr, "%s\t%s\t%s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
+        fprintf(fptr, "%s %s %s %s %s %d %d\n", nameofapp, locality, ldaApp, parking, pss, price, bhk);
     }
     fclose(fptr);
     system("cls");
@@ -350,7 +354,7 @@ void searchDetails()
     fptr = fopen("houses.txt", "r");
     // fflush(stdin);
     int i =0;
-    while (fscanf(fptr, "%s\t%s\t%s %s %s %d %d\n", 
+    while (fscanf(fptr, "%s %s %s %s %s %d %d\n", 
     nameofapp, locality, ldaApp, parking, pss, &price, &bhk) != EOF)
     {
         // printf("%s", locality);
