@@ -4,16 +4,16 @@
 #include <windows.h>
 #include <string.h>
 #include <stdlib.h>
-
 void verify();
 int menu();
 void createaccount();
 void login();
 void searchDetails();
-void gotoxy(int, int);
-// void addDetails(char);
+
+void gotoxy(int , int);
 FILE *fp;
 struct user u, U;
+void addTenantsInfo(struct user , struct user);
 int choice;
 char fname[20], lname[20], uname[20], pss[20], C;
 struct user
@@ -47,7 +47,7 @@ int main()
         default:
             printf("Invalid Choice ! ");
             exit(0);
-            break;
+            // break;
         }
     }
 
@@ -81,7 +81,7 @@ void takePassword(char pwd[20])
     }
     // printf("%s", pwd);
 }
-int menu() // -- returns 2 if 2 is pressed
+int menu() 
 {
     int ch;
     printf("1. Signup:  \n");
@@ -315,7 +315,7 @@ void addDetails(char pss[20])
     }
     Sleep(1000);
 }
-void searchDetails()
+void searchDetails(struct user U)
 {
     struct user u;
     FILE *fptr, *fp;
@@ -448,11 +448,61 @@ void searchDetails()
     }
 
     fclose(fptr);
-    while (getch())
-    {
+    char firstname[50], lastname[50];
+    printf("\n Enter the name of the owner whom you want to connect with or press y to go to main menu : ");
+    if(getch()=='y'){
+        printf("\n");
         main();
     }
+    scanf("%s %s", firstname, lastname);
     
+    fp = fopen("owner.txt", "r");
+    while (fread(&u, sizeof(struct user), 1, fp)){
+        if ((strcmp(firstname, u.fname) == 0) && (strcmp(lastname, u.lname) == 0)){
+            addTenantsInfo(U, u);
+        }
+    }
+    
+}
+void addTenantsInfo(struct user tenant, struct user owner){
+    FILE *fptr;
+    char occ[50], isMarried[50];
+    int duration, members;
+    printf("\nOWNER WANTS TO KNOW \n");
+    printf("Your Occupation::");
+    scanf("%s", occ);
+    printf("\n");
+    printf("Are you married ? (y/n):: ");
+    scanf("%s", isMarried);
+    printf("\n");
+    printf("How many members are there ?:: ");
+    scanf("%d", &members);
+    printf("\n");
+    printf("Duration for which you want this place(in months):: ");
+    scanf("%d", &duration);
+    printf("\n");
+    fptr = fopen("tenants-info.txt", "ab+");
+    if (fptr == NULL)
+    {
+        printf("Failed to create the required file.");
+    }
+    else{
+        fprintf(fptr, "%s %s %s %s %s %s %d %d\n", tenant.username, tenant.pass, owner.username, owner.pass, occ, isMarried, duration, members);
+
+    }
+    fclose(fptr);
+    system("cls");
+    char string[200] = "Your details added successfully. Owner will reach to you shortly.";
+    int z = strlen(string);
+    for (int i = 0; i <= z; i++)
+    {
+        Sleep(60);
+        printf(" %c", string[i]);
+    }
+    Sleep(1000);
+    printf("\n");
+    main();
+
 }
 void login()
 {
@@ -507,11 +557,11 @@ void login()
 
             if (u.position[0] == 'o')
             {
-                ptr = "Owner";
+                ptr = "OWNER";
             }
             else if (u.position[0] == 't')
             {
-                ptr = "Tenant";
+                ptr = "TENANT";
             }
             else
             {
@@ -524,7 +574,7 @@ void login()
             getch();
             printf("\n");
             gotoxy(45, 15);
-            if (ptr == "Tenant")
+            if (ptr == "TENANT")
             {
                 int k;
                 printf("1. Search for home:  \n");
@@ -541,7 +591,7 @@ void login()
                     exit(0);
                     break;
                 case 1:
-                    searchDetails();
+                    searchDetails(u);
                     break;
                 default:
                     printf("Invalid choice !");
@@ -553,8 +603,10 @@ void login()
             {
                 int k;
                 printf("1. Add home details:  \n");
-                gotoxy(45, 18);
-                printf("2. Exit:  \n");
+                gotoxy(45, 17);
+                printf("2. Search for tenants:  \n");
+                gotoxy(45, 19);
+                printf("3. Exit:  \n");
                 printf("\n");
                 // printf("4. :  \n");
                 gotoxy(45, 21);
@@ -565,8 +617,9 @@ void login()
                 case 1:
                     addDetails(u.pass);
                     break;
-
                 case 2:
+                    exit(0);
+                case 3:
                     exit(0);
 
                 default:
